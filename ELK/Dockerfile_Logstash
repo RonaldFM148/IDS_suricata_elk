@@ -1,0 +1,33 @@
+# Base image
+FROM docker.elastic.co/logstash/logstash:8.17.0
+
+# Cambiar al usuario root para realizar tareas administrativas
+USER root
+
+# Actualizar repositorios de Ubuntu y asegurarse de que estén disponibles
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common \
+	iputils-ping \
+	net-tools \
+	tcpdump \
+	telnet
+
+# Opcional: Instalar paquetes adicionales (ejemplo: nano y wget)
+RUN apt-get install -y vim wget
+
+# Limpiar el caché de apt para reducir el tamaño de la imagen
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Remover archivo de configuración existente y copiar el nuevo archivo
+RUN rm -f /usr/share/logstash/pipeline/logstash.conf
+COPY ./pipeline/ /usr/share/logstash/pipeline/
+COPY ./config/ /usr/share/logstash/config/
+
+# Cambiar el usuario de nuevo al predeterminado de Logstash
+#USER logstash
+
+# Comando de inicio (opcional si no es heredado del logstash base)
+#CMD ["logstash"]

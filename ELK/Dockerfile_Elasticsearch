@@ -1,0 +1,12 @@
+# Imagen base de Elasticsearch
+FROM docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+
+# Establecer variables de entorno necesarias para Elasticsearch
+ENV discovery.type=single-node
+ENV ES_JAVA_OPTS="-Xms512m -Xmx1g"
+
+# Exponer el puerto 9200 para conexiones externas
+EXPOSE 9200
+
+# Comando de inicio por defecto
+CMD ["bin/elasticsearch"]

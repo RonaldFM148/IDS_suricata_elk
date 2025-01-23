@@ -1,0 +1,55 @@
+services:
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: Dockerfile_Elasticsearch
+    container_name: elastic
+    image: elastic_image
+    environment:
+      - SERVER_NAME=elasticsearch
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx1g
+    networks:
+      ids_network:
+        ipv4_address: 10.0.0.2
+    ports:
+      - "9200:9200"
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  kibana:
+    build:
+      context: .
+      dockerfile: Dockerfile_Kibana
+    container_name: kibana
+    image: kibana_image
+    environment:
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+      - ELASTICSEARCH_HOSTS=https://10.0.0.2:9200
+    networks:
+      ids_network:
+        ipv4_address: 10.0.0.3
+    ports:
+      - "5601:5601"
+      
+  logstash:
+    build:
+        context: .
+        dockerfile: Dockerfile_Logstash
+    container_name: logstash
+    image: logstash_image
+    networks:
+      ids_network:
+        ipv4_address: 10.0.0.4
+    volumes:
+      - V:/IDS/ELK/pipeline/:/usr/share/logstash/pipeline/
+      - V:/IDS/suricata/logs:/var/log/logstash/
+    stdin_open: true
+    tty: true
+
+networks:
+  ids_network:
+    external: true

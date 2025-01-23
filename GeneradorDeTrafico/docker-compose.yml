@@ -1,0 +1,22 @@
+services:
+  generator-trafic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: generator_trafic_image
+    container_name: generator_trafic
+    volumes:
+      - V:/IDS/GeneradorDeTrafico/data:/home/user/data
+    networks:
+      ids_network:
+        ipv4_address: 10.0.0.6
+    cap_add:
+      - NET_ADMIN
+    stdin_open: true
+    tty: true
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+
+networks:
+  ids_network:
+    external: true

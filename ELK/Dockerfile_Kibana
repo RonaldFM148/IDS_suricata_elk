@@ -1,0 +1,13 @@
+# Imagen base de Kibana
+FROM docker.elastic.co/kibana/kibana:8.17.0
+
+# Establecer variables de entorno necesarias para Kibana
+ENV SERVER_NAME=kibana \
+    SERVER_HOST=0.0.0.0 \
+    ELASTICSEARCH_HOSTS=https://10.0.0.2:9200
+
+# Exponer el puerto 5601 para conexiones externas
+EXPOSE 5601
+
+# Comando de inicio por defecto
+CMD ["bin/kibana"]

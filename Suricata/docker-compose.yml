@@ -1,0 +1,22 @@
+services:
+  suricata:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: suricata_image
+    container_name: suricata
+    volumes:
+      - ./logs:/var/log/suricata
+      - ./config:/etc/suricata/custom_config
+      - ./config/rules:/etc/suricata/custom_config/rules
+    networks:
+      ids_network:
+        ipv4_address: 10.0.0.5
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "3000:3000"
+
+networks:
+  ids_network:
+    external: true
